@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
     private static final int SMS_PERMISSION = 1002;
 
     // फिलहाल testing के लिए 1 SMS प्रति minute
-    private static final long SEND_INTERVAL_MS = 60000L;
+    private static final long SEND_INTERVAL_MS = 3000L;
 
     // एक session में maximum 20 SMS
     private static final int MAX_PER_SESSION = 20;
