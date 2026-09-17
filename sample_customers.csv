@@ -1,0 +1,4 @@
+phone,name,amount,due_date,consumer_last4,consent
+9876543210,रमेश जी,2840,20-09-2026,4521,yes
+9123456780,सीमा जी,1190,21-09-2026,8803,yes
+9000000000,Demo No Consent,500,22-09-2026,1111,no
