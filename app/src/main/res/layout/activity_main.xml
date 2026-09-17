@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F3F6FC">
+    android:background="#F4F7FC">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,60 +12,57 @@
         android:orientation="vertical">
 
         <!-- PREMIUM HEADER -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="#091B3A"
             android:paddingLeft="22dp"
-            android:paddingTop="30dp"
+            android:paddingTop="28dp"
             android:paddingRight="22dp"
-            android:paddingBottom="24dp"
-            android:background="@drawable/bg_header_luxury">
+            android:paddingBottom="24dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hindi SMS"
                 android:textColor="#FFFFFF"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium" />
+                android:textSize="31sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Reminder Agent"
-                android:textColor="#75B8FF"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium" />
+                android:textColor="#61A7FF"
+                android:textSize="35sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="7dp"
                 android:text="Authorized • Consent Based • Smart Reminders"
-                android:textColor="#D6E4FF"
+                android:textColor="#D2DDF2"
                 android:textSize="13sp" />
 
-            <!-- Feature chips -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
                     android:layout_weight="1"
+                    android:background="#18376B"
                     android:gravity="center"
-                    android:padding="10dp"
-                    android:text="✓ Consent"
+                    android:text="Consent Only"
                     android:textColor="#FFFFFF"
                     android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:background="@drawable/bg_dark_chip" />
+                    android:textStyle="bold" />
 
                 <Space
                     android:layout_width="8dp"
@@ -73,15 +70,14 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
                     android:layout_weight="1"
+                    android:background="#18376B"
                     android:gravity="center"
-                    android:padding="10dp"
-                    android:text="⚡ Fast"
+                    android:text="Fast Queue"
                     android:textColor="#FFFFFF"
                     android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:background="@drawable/bg_dark_chip" />
+                    android:textStyle="bold" />
 
                 <Space
                     android:layout_width="8dp"
@@ -89,41 +85,44 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
                     android:layout_weight="1"
+                    android:background="#18376B"
                     android:gravity="center"
-                    android:padding="10dp"
-                    android:text="SMS Queue"
+                    android:text="Direct SMS"
                     android:textColor="#FFFFFF"
                     android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:background="@drawable/bg_dark_chip" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- MAIN CONTENT -->
+
+        <!-- CONTENT -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
+
             <!-- IDENTITY CARD -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:elevation="6dp"
                 android:orientation="vertical"
-                android:padding="18dp"
-                android:elevation="7dp"
-                android:background="@drawable/bg_luxury_card">
+                android:padding="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Reminder Identity"
-                    android:textColor="#0F172A"
+                    android:textColor="#101828"
                     android:textSize="19sp"
                     android:textStyle="bold" />
 
@@ -131,40 +130,43 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="SMS में दिखाई देने वाला आपका नाम"
-                    android:textColor="#64748B"
+                    android:text="SMS में दिखने वाला नाम"
+                    android:textColor="#667085"
                     android:textSize="13sp" />
 
                 <EditText
                     android:id="@+id/identityInput"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_luxury_input"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
+                    android:layout_marginTop="14dp"
+                    android:backgroundTint="#2F6FED"
+                    android:hint="Bill Reminder Service"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
                     android:text="Bill Reminder Service"
-                    android:textColor="#0F172A"
-                    android:textSize="16sp"
-                    android:singleLine="true" />
+                    android:textColor="#101828"
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
+
             <!-- TEMPLATE CARD -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="15dp"
-                android:padding="18dp"
-                android:elevation="7dp"
-                android:background="@drawable/bg_luxury_card">
+                android:background="#FFFFFF"
+                android:elevation="6dp"
+                android:orientation="vertical"
+                android:padding="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SMS Template"
-                    android:textColor="#0F172A"
+                    android:textColor="#101828"
                     android:textSize="19sp"
                     android:textStyle="bold" />
 
@@ -172,24 +174,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="यह template हर customer के लिए personalize होगा"
-                    android:textColor="#64748B"
+                    android:text="हर customer के लिए अपने-आप personalize होगा"
+                    android:textColor="#667085"
                     android:textSize="13sp" />
 
                 <EditText
                     android:id="@+id/templateInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="190dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="14dp"
+                    android:backgroundTint="#AFC8F8"
                     android:gravity="top"
                     android:inputType="textMultiLine"
-                    android:background="@drawable/bg_luxury_input"
-                    android:padding="16dp"
-                    android:textColor="#0F172A"
-                    android:textSize="15sp"
                     android:lineSpacingExtra="4dp"
-                    android:text="नमस्कार {name}, यह {identity} का reminder है। आपके रिकॉर्ड में ₹{amount} का बिल बाकी है, जिसकी अंतिम तारीख {due} है। Consumer No. ****{last4}. भुगतान केवल आधिकारिक वेबसाइट, ऐप या अधिकृत केंद्र से करें।" />
+                    android:minHeight="190dp"
+                    android:padding="10dp"
+                    android:text="नमस्कार {name}, यह {identity} का reminder है। आपके रिकॉर्ड में ₹{amount} का बिल बाकी है, जिसकी अंतिम तारीख {due} है। Consumer No. ****{last4}. भुगतान केवल आधिकारिक वेबसाइट, ऐप या अधिकृत केंद्र से करें।"
+                    android:textColor="#101828"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -201,21 +203,23 @@
 
             </LinearLayout>
 
-            <!-- CUSTOMER CARD -->
+
+            <!-- CUSTOMER IMPORT -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="15dp"
-                android:padding="18dp"
-                android:elevation="7dp"
-                android:background="@drawable/bg_luxury_card">
+                android:background="#FFFFFF"
+                android:elevation="6dp"
+                android:orientation="vertical"
+                android:padding="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Customer List"
-                    android:textColor="#0F172A"
+                    android:textColor="#101828"
                     android:textSize="19sp"
                     android:textStyle="bold" />
 
@@ -224,7 +228,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="CSV file import करके SMS queue तैयार करें"
-                    android:textColor="#64748B"
+                    android:textColor="#667085"
                     android:textSize="13sp" />
 
                 <Button
@@ -232,43 +236,43 @@
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:layout_marginTop="16dp"
+                    android:backgroundTint="#2563EB"
                     android:text="1. Import Customer CSV"
                     android:textAllCaps="false"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
                     android:textColor="#FFFFFF"
-                    android:background="@drawable/bg_primary_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/listInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="13dp"
-                    android:padding="14dp"
+                    android:background="#EDF4FF"
+                    android:padding="15dp"
                     android:text="अभी कोई customer list import नहीं हुई है।"
-                    android:textColor="#475569"
-                    android:textSize="14sp"
-                    android:background="@drawable/bg_info_luxury" />
+                    android:textColor="#344054"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
+
             <!-- ACTIONS -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="15dp"
-                android:padding="18dp"
-                android:elevation="7dp"
-                android:background="@drawable/bg_luxury_card">
+                android:background="#FFFFFF"
+                android:elevation="6dp"
+                android:orientation="vertical"
+                android:padding="18dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Actions"
-                    android:textColor="#0F172A"
+                    android:textColor="#101828"
                     android:textSize="19sp"
                     android:textStyle="bold" />
 
@@ -276,70 +280,66 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="Preview करें, फिर SMS queue start करें"
-                    android:textColor="#64748B"
+                    android:text="पहले SMS check करें, फिर queue शुरू करें"
+                    android:textColor="#667085"
                     android:textSize="13sp" />
 
                 <Button
                     android:id="@+id/previewBtn"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="56dp"
                     android:layout_marginTop="16dp"
+                    android:backgroundTint="#E6EEFF"
                     android:text="2. Preview First SMS"
                     android:textAllCaps="false"
-                    android:textStyle="bold"
+                    android:textColor="#175CD3"
                     android:textSize="15sp"
-                    android:textColor="#1D4ED8"
-                    android:background="@drawable/bg_secondary_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null" />
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/startBtn"
                     android:layout_width="match_parent"
-                    android:layout_height="58dp"
+                    android:layout_height="60dp"
                     android:layout_marginTop="10dp"
+                    android:backgroundTint="#039855"
                     android:text="3. Start Auto SMS Queue"
                     android:textAllCaps="false"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
                     android:textColor="#FFFFFF"
-                    android:background="@drawable/bg_success_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/stopBtn"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="54dp"
                     android:layout_marginTop="10dp"
+                    android:backgroundTint="#FEE4E2"
                     android:text="Stop Queue"
                     android:textAllCaps="false"
-                    android:textStyle="bold"
+                    android:textColor="#B42318"
                     android:textSize="15sp"
-                    android:textColor="#B91C1C"
-                    android:background="@drawable/bg_danger_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
-            <!-- STATUS PANEL -->
+
+            <!-- STATUS -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="15dp"
-                android:padding="20dp"
-                android:elevation="6dp"
-                android:background="@drawable/bg_status_luxury">
+                android:background="#0B1F3F"
+                android:elevation="7dp"
+                android:orientation="vertical"
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Status &amp; Progress"
-                    android:textColor="#D9E7FF"
-                    android:textSize="14sp"
+                    android:text="STATUS &amp; PROGRESS"
+                    android:textColor="#AFC6EA"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -348,28 +348,31 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Status: Ready"
-                    android:textColor="#3EF0A8"
-                    android:textSize="24sp"
+                    android:textColor="#32D583"
+                    android:textSize="25sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Queue activity यहाँ दिखाई देगी"
-                    android:textColor="#9FB1CD"
+                    android:layout_marginTop="6dp"
+                    android:text="SMS queue activity यहाँ दिखाई देगी"
+                    android:textColor="#9FB2D1"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
+
+            <!-- FOOTER -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginTop="18dp"
-                android:layout_marginBottom="24dp"
-                android:text="Send only to authorized and consented customers."
-                android:textColor="#64748B"
+                android:layout_marginBottom="25dp"
+                android:gravity="center"
+                android:text="Use responsibly • Authorized customers only"
+                android:textColor="#667085"
                 android:textSize="11sp" />
 
         </LinearLayout>
