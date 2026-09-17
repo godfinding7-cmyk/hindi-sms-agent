@@ -4,115 +4,375 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F5F6F8">
+    android:background="#F3F6FC">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
-        <TextView
+        <!-- PREMIUM HEADER -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hindi SMS Reminder Agent"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="#111111"
-            android:layout_marginBottom="6dp" />
+            android:orientation="vertical"
+            android:paddingLeft="22dp"
+            android:paddingTop="30dp"
+            android:paddingRight="22dp"
+            android:paddingBottom="24dp"
+            android:background="@drawable/bg_header_luxury">
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hindi SMS"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reminder Agent"
+                android:textColor="#75B8FF"
+                android:textSize="34sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Authorized • Consent Based • Smart Reminders"
+                android:textColor="#D6E4FF"
+                android:textSize="13sp" />
+
+            <!-- Feature chips -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="✓ Consent"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_dark_chip" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="1dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="⚡ Fast"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_dark_chip" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="1dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="SMS Queue"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_dark_chip" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- MAIN CONTENT -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="केवल authorized और consent वाले reminder SMS के लिए"
-            android:textSize="14sp"
-            android:textColor="#666666"
-            android:layout_marginBottom="20dp" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reminder Identity"
-            android:textStyle="bold"
-            android:textColor="#222222" />
+            <!-- IDENTITY CARD -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp"
+                android:elevation="7dp"
+                android:background="@drawable/bg_luxury_card">
 
-        <EditText
-            android:id="@+id/identityInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Bill Reminder Service"
-            android:text="Bill Reminder Service"
-            android:padding="12dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="16dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reminder Identity"
+                    android:textColor="#0F172A"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SMS Template"
-            android:textStyle="bold"
-            android:textColor="#222222" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="SMS में दिखाई देने वाला आपका नाम"
+                    android:textColor="#64748B"
+                    android:textSize="13sp" />
 
-        <EditText
-            android:id="@+id/templateInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="160dp"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:padding="12dp"
-            android:layout_marginTop="6dp"
-            android:text="नमस्कार {name}, यह {identity} का reminder है। आपके रिकॉर्ड में ₹{amount} का बिल बाकी है, जिसकी अंतिम तारीख {due} है। Consumer No. ****{last4}. भुगतान केवल आधिकारिक वेबसाइट, ऐप या अधिकृत केंद्र से करें।" />
+                <EditText
+                    android:id="@+id/identityInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_luxury_input"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Bill Reminder Service"
+                    android:textColor="#0F172A"
+                    android:textSize="16sp"
+                    android:singleLine="true" />
 
-        <Button
-            android:id="@+id/importBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="1. Import Customer CSV"
-            android:layout_marginTop="18dp" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/listInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="अभी कोई customer list import नहीं हुई है।"
-            android:textColor="#555555"
-            android:padding="12dp"
-            android:layout_marginTop="8dp"
-            android:background="#EDEFF3" />
+            <!-- TEMPLATE CARD -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:padding="18dp"
+                android:elevation="7dp"
+                android:background="@drawable/bg_luxury_card">
 
-        <Button
-            android:id="@+id/previewBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="2. Preview First SMS"
-            android:layout_marginTop="16dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SMS Template"
+                    android:textColor="#0F172A"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/startBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="3. Start Auto SMS Queue"
-            android:layout_marginTop="10dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="यह template हर customer के लिए personalize होगा"
+                    android:textColor="#64748B"
+                    android:textSize="13sp" />
 
-        <Button
-            android:id="@+id/stopBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Stop Queue"
-            android:layout_marginTop="10dp" />
+                <EditText
+                    android:id="@+id/templateInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="190dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/bg_luxury_input"
+                    android:padding="16dp"
+                    android:textColor="#0F172A"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="नमस्कार {name}, यह {identity} का reminder है। आपके रिकॉर्ड में ₹{amount} का बिल बाकी है, जिसकी अंतिम तारीख {due} है। Consumer No. ****{last4}. भुगतान केवल आधिकारिक वेबसाइट, ऐप या अधिकृत केंद्र से करें।" />
 
-        <TextView
-            android:id="@+id/statusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Status: Ready"
-            android:textStyle="bold"
-            android:textColor="#222222"
-            android:padding="14dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="30dp"
-            android:background="#E8F5E9" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="{name}   {identity}   {amount}   {due}   {last4}"
+                    android:textColor="#2563EB"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <!-- CUSTOMER CARD -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:padding="18dp"
+                android:elevation="7dp"
+                android:background="@drawable/bg_luxury_card">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Customer List"
+                    android:textColor="#0F172A"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="CSV file import करके SMS queue तैयार करें"
+                    android:textColor="#64748B"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/importBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_marginTop="16dp"
+                    android:text="1. Import Customer CSV"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/bg_primary_button"
+                    android:backgroundTint="@null"
+                    android:stateListAnimator="@null" />
+
+                <TextView
+                    android:id="@+id/listInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:padding="14dp"
+                    android:text="अभी कोई customer list import नहीं हुई है।"
+                    android:textColor="#475569"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_info_luxury" />
+
+            </LinearLayout>
+
+            <!-- ACTIONS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:padding="18dp"
+                android:elevation="7dp"
+                android:background="@drawable/bg_luxury_card">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Actions"
+                    android:textColor="#0F172A"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Preview करें, फिर SMS queue start करें"
+                    android:textColor="#64748B"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/previewBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="16dp"
+                    android:text="2. Preview First SMS"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#1D4ED8"
+                    android:background="@drawable/bg_secondary_button"
+                    android:backgroundTint="@null"
+                    android:stateListAnimator="@null" />
+
+                <Button
+                    android:id="@+id/startBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_marginTop="10dp"
+                    android:text="3. Start Auto SMS Queue"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/bg_success_button"
+                    android:backgroundTint="@null"
+                    android:stateListAnimator="@null" />
+
+                <Button
+                    android:id="@+id/stopBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Stop Queue"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#B91C1C"
+                    android:background="@drawable/bg_danger_button"
+                    android:backgroundTint="@null"
+                    android:stateListAnimator="@null" />
+
+            </LinearLayout>
+
+            <!-- STATUS PANEL -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:padding="20dp"
+                android:elevation="6dp"
+                android:background="@drawable/bg_status_luxury">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status &amp; Progress"
+                    android:textColor="#D9E7FF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/statusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Status: Ready"
+                    android:textColor="#3EF0A8"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Queue activity यहाँ दिखाई देगी"
+                    android:textColor="#9FB1CD"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="24dp"
+                android:text="Send only to authorized and consented customers."
+                android:textColor="#64748B"
+                android:textSize="11sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
