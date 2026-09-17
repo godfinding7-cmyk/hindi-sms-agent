@@ -4,9 +4,11 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
-        android:allowBackup="true"
-        android:label="Hindi SMS Agent"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+    android:allowBackup="true"
+    android:label="Hindi SMS Agent"
+    android:icon="@drawable/jvvnl_notification_bell_icon"
+    android:roundIcon="@drawable/jvvnl_notification_bell_icon"
+    android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
             android:name=".MainActivity"
