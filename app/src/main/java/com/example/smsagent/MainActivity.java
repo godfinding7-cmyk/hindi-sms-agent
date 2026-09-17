@@ -384,7 +384,7 @@ public class MainActivity extends Activity {
                                         + queueIndex
                                         + "/"
                                         + customers.size()
-                                        + "\nNext SMS: 60 seconds"
+                                        + "\nNext SMS: 3 seconds"
                         );
 
                         handler.postDelayed(
