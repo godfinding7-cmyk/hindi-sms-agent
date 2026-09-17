@@ -6,9 +6,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.telephony.SmsManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,22 +25,27 @@ import java.util.Locale;
 public class MainActivity extends Activity {
 
     private static final int PICK_CSV = 1001;
-    private static final int PERM_SMS = 1002;
+    private static final int SMS_PERMISSION = 1002;
 
+    // फिलहाल testing के लिए 1 SMS प्रति minute
     private static final long SEND_INTERVAL_MS = 60000L;
+
+    // एक session में maximum 20 SMS
     private static final int MAX_PER_SESSION = 20;
 
     private final List<Customer> customers = new ArrayList<>();
-    private final Handler handler = new Handler();
 
-    private int queueIndex = 0;
-    private boolean running = false;
+    private final Handler handler =
+            new Handler(Looper.getMainLooper());
 
     private EditText identityInput;
     private EditText templateInput;
+
     private TextView listInfo;
     private TextView statusText;
-    private TextView repliesText;
+
+    private int queueIndex = 0;
+    private boolean running = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,34 +53,58 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        identityInput = findViewById(R.id.identityInput);
-        templateInput = findViewById(R.id.templateInput);
+        identityInput =
+                findViewById(R.id.identityInput);
 
-        listInfo = findViewById(R.id.listInfo);
-        statusText = findViewById(R.id.statusText);
-        repliesText = findViewById(R.id.repliesText);
+        templateInput =
+                findViewById(R.id.templateInput);
 
-        Button importBtn = findViewById(R.id.importBtn);
-        Button previewBtn = findViewById(R.id.previewBtn);
-        Button startBtn = findViewById(R.id.startBtn);
-        Button stopBtn = findViewById(R.id.stopBtn);
-        Button repliesBtn = findViewById(R.id.repliesBtn);
+        listInfo =
+                findViewById(R.id.listInfo);
 
-        importBtn.setOnClickListener(v -> pickCsv());
+        statusText =
+                findViewById(R.id.statusText);
 
-        previewBtn.setOnClickListener(v -> previewFirst());
+        Button importBtn =
+                findViewById(R.id.importBtn);
 
-        startBtn.setOnClickListener(v -> confirmAndStart());
+        Button previewBtn =
+                findViewById(R.id.previewBtn);
+
+        Button startBtn =
+                findViewById(R.id.startBtn);
+
+        Button stopBtn =
+                findViewById(R.id.stopBtn);
+
+        importBtn.setOnClickListener(v ->
+                pickCsv());
+
+        previewBtn.setOnClickListener(v ->
+                previewFirstSms());
+
+        startBtn.setOnClickListener(v ->
+                confirmStart());
 
         stopBtn.setOnClickListener(v ->
                 stopQueue("Queue stopped"));
 
-        repliesBtn.setOnClickListener(v ->
-                refreshReplies());
+        requestSmsPermission();
+    }
 
-        requestSmsPermissionsIfNeeded();
+    private void requestSmsPermission() {
 
-        refreshReplies();
+        if (checkSelfPermission(
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(
+                    new String[]{
+                            Manifest.permission.SEND_SMS
+                    },
+                    SMS_PERMISSION
+            );
+        }
     }
 
     private void pickCsv() {
@@ -85,9 +114,12 @@ public class MainActivity extends Activity {
 
         intent.setType("text/*");
 
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.addCategory(
+                Intent.CATEGORY_OPENABLE);
 
-        startActivityForResult(intent, PICK_CSV);
+        startActivityForResult(
+                intent,
+                PICK_CSV);
     }
 
     @Override
@@ -114,7 +146,8 @@ public class MainActivity extends Activity {
 
         customers.clear();
 
-        int skippedNoConsent = 0;
+        int noConsent = 0;
+        int invalid = 0;
 
         try {
 
@@ -123,27 +156,32 @@ public class MainActivity extends Activity {
                             new InputStreamReader(
                                     getContentResolver()
                                             .openInputStream(uri),
-                                    StandardCharsets.UTF_8));
+                                    StandardCharsets.UTF_8
+                            )
+                    );
 
             String line;
-
-            boolean first = true;
+            boolean firstLine = true;
 
             while ((line = br.readLine()) != null) {
 
-                if (first) {
-                    first = false;
+                // Header skip
+                if (firstLine) {
+                    firstLine = false;
                     continue;
                 }
 
-                if (line.trim().isEmpty())
+                if (line.trim().isEmpty()) {
                     continue;
+                }
 
                 String[] p =
                         line.split(",", -1);
 
-                if (p.length < 6)
+                if (p.length < 6) {
+                    invalid++;
                     continue;
+                }
 
                 String phone =
                         cleanPhone(p[0]);
@@ -171,17 +209,14 @@ public class MainActivity extends Activity {
                                 || consent.equals("1");
 
                 if (!allowed) {
-
-                    skippedNoConsent++;
-
+                    noConsent++;
                     continue;
                 }
 
-                if (!phone.matches("\\+?[0-9]{10,13}"))
+                if (!phone.matches("\\+?[0-9]{10,13}")) {
+                    invalid++;
                     continue;
-
-                if (isDnc(phone))
-                    continue;
+                }
 
                 customers.add(
                         new Customer(
@@ -189,75 +224,84 @@ public class MainActivity extends Activity {
                                 name,
                                 amount,
                                 due,
-                                last4));
+                                last4
+                        )
+                );
 
                 if (customers.size()
-                        >= MAX_PER_SESSION)
+                        >= MAX_PER_SESSION) {
                     break;
+                }
             }
 
             br.close();
 
             listInfo.setText(
-                    "Authorized contacts loaded: "
+                    "Ready to send: "
                             + customers.size()
-                            + "\nNo-consent skipped: "
-                            + skippedNoConsent
-                            + "\nSession limit: "
-                            + MAX_PER_SESSION);
+                            + "\nNo consent skipped: "
+                            + noConsent
+                            + "\nInvalid rows: "
+                            + invalid
+                            + "\nMaximum/session: "
+                            + MAX_PER_SESSION
+            );
+
+            statusText.setText(
+                    "Status: CSV loaded");
 
         } catch (Exception e) {
 
             statusText.setText(
-                    "CSV error: "
+                    "CSV Error: "
                             + e.getMessage());
         }
     }
 
     private String cleanPhone(String raw) {
 
-        String p =
+        String phone =
                 raw.replaceAll(
                         "[^0-9+]",
                         "");
 
-        if (p.startsWith("0")
-                && p.length() == 11) {
+        if (phone.startsWith("0")
+                && phone.length() == 11) {
 
-            p = p.substring(1);
+            phone =
+                    phone.substring(1);
         }
 
-        return p;
+        return phone;
     }
 
-    private void previewFirst() {
+    private void previewFirstSms() {
 
         if (customers.isEmpty()) {
 
             toast("पहले CSV import करें");
-
             return;
         }
 
-        String msg =
+        String message =
                 buildMessage(
                         customers.get(0));
 
         new AlertDialog.Builder(this)
-                .setTitle("SMS Preview")
-                .setMessage(msg)
+                .setTitle("First SMS Preview")
+                .setMessage(message)
                 .setPositiveButton(
                         "OK",
                         null)
                 .show();
     }
 
-    private void confirmAndStart() {
+    private void confirmStart() {
 
         if (customers.isEmpty()) {
 
             toast(
-                    "पहले consent वाली CSV import करें");
+                    "पहले customer CSV import करें");
 
             return;
         }
@@ -266,21 +310,23 @@ public class MainActivity extends Activity {
                 Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            requestSmsPermissionsIfNeeded();
+            requestSmsPermission();
+
+            toast(
+                    "SMS permission Allow करें");
 
             return;
         }
 
         new AlertDialog.Builder(this)
-                .setTitle(
-                        "Authorized reminders only")
+                .setTitle("Start SMS Queue?")
                 .setMessage(
-                        "क्या इस list के सभी recipients ने reminder SMS के लिए consent दिया है?")
+                        "केवल उन्हीं contacts को SMS भेजें जिन्होंने reminder के लिए consent दिया है।")
                 .setNegativeButton(
-                        "नहीं",
+                        "Cancel",
                         null)
                 .setPositiveButton(
-                        "हाँ, Start",
+                        "Start",
                         (dialog, which) ->
                                 startQueue())
                 .show();
@@ -289,63 +335,57 @@ public class MainActivity extends Activity {
     private void startQueue() {
 
         running = true;
-
         queueIndex = 0;
 
         statusText.setText(
-                "Status: Queue started\n1 SMS/minute");
+                "Status: SMS queue started");
 
         handler.post(
                 sendNextRunnable);
     }
 
-    private final Runnable
-            sendNextRunnable =
+    private final Runnable sendNextRunnable =
             new Runnable() {
 
                 @Override
                 public void run() {
 
-                    if (!running)
+                    if (!running) {
                         return;
-
-                    while (queueIndex
-                            < customers.size()
-                            && isDnc(
-                                    customers
-                                            .get(queueIndex)
-                                            .phone)) {
-
-                        queueIndex++;
                     }
 
                     if (queueIndex
                             >= customers.size()) {
 
                         stopQueue(
-                                "Queue complete");
+                                "All SMS sent");
 
                         return;
                     }
 
-                    Customer c =
-                            customers
-                                    .get(queueIndex);
+                    Customer customer =
+                            customers.get(
+                                    queueIndex);
 
                     try {
 
+                        String message =
+                                buildMessage(
+                                        customer);
+
                         sendSms(
-                                c.phone,
-                                buildMessage(c));
+                                customer.phone,
+                                message);
 
                         queueIndex++;
 
                         statusText.setText(
-                                "SMS भेजा: "
+                                "SMS Sent: "
                                         + queueIndex
                                         + "/"
                                         + customers.size()
-                                        + "\nNext SMS 60 sec बाद");
+                                        + "\nNext SMS: 60 seconds"
+                        );
 
                         handler.postDelayed(
                                 this,
@@ -356,7 +396,7 @@ public class MainActivity extends Activity {
                         running = false;
 
                         statusText.setText(
-                                "Send failed: "
+                                "SMS failed: "
                                         + e.getMessage());
                     }
                 }
@@ -366,36 +406,24 @@ public class MainActivity extends Activity {
             String phone,
             String message) {
 
-        SmsManager smsManager;
-
-        if (Build.VERSION.SDK_INT
-                >= Build.VERSION_CODES.S) {
-
-            smsManager =
-                    getSystemService(
-                            SmsManager.class);
-
-        } else {
-
-            smsManager =
-                    SmsManager.getDefault();
-        }
+        SmsManager smsManager =
+                SmsManager.getDefault();
 
         ArrayList<String> parts =
-                smsManager
-                        .divideMessage(message);
+                smsManager.divideMessage(
+                        message);
 
-        smsManager
-                .sendMultipartTextMessage(
-                        phone,
-                        null,
-                        parts,
-                        null,
-                        null);
+        smsManager.sendMultipartTextMessage(
+                phone,
+                null,
+                parts,
+                null,
+                null
+        );
     }
 
     private String buildMessage(
-            Customer c) {
+            Customer customer) {
 
         String identity =
                 identityInput
@@ -416,7 +444,7 @@ public class MainActivity extends Activity {
                 .replace(
                         "{name}",
                         safe(
-                                c.name,
+                                customer.name,
                                 "ग्राहक"))
 
                 .replace(
@@ -426,37 +454,37 @@ public class MainActivity extends Activity {
                 .replace(
                         "{amount}",
                         safe(
-                                c.amount,
+                                customer.amount,
                                 "—"))
 
                 .replace(
                         "{due}",
                         safe(
-                                c.due,
+                                customer.due,
                                 "—"))
 
                 .replace(
                         "{last4}",
                         safe(
-                                c.last4,
+                                customer.last4,
                                 "—"));
     }
 
     private String safe(
-            String text,
+            String value,
             String fallback) {
 
-        if (text == null
-                || text.trim().isEmpty()) {
+        if (value == null
+                || value.trim().isEmpty()) {
 
             return fallback;
         }
 
-        return text.trim();
+        return value.trim();
     }
 
     private void stopQueue(
-            String reason) {
+            String message) {
 
         running = false;
 
@@ -465,97 +493,3 @@ public class MainActivity extends Activity {
 
         statusText.setText(
                 "Status: "
-                        + reason);
-    }
-
-    private void requestSmsPermissionsIfNeeded() {
-
-        List<String> permissions =
-                new ArrayList<>();
-
-        if (checkSelfPermission(
-                Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            permissions.add(
-                    Manifest.permission.SEND_SMS);
-        }
-
-        if (checkSelfPermission(
-                Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            permissions.add(
-                    Manifest.permission.RECEIVE_SMS);
-        }
-
-        if (!permissions.isEmpty()) {
-
-            requestPermissions(
-                    permissions.toArray(
-                            new String[0]),
-                    PERM_SMS);
-        }
-    }
-
-    private boolean isDnc(
-            String phone) {
-
-        return getSharedPreferences(
-                "sms_agent",
-                MODE_PRIVATE)
-
-                .getBoolean(
-                        "dnc_" + phone,
-                        false);
-    }
-
-    private void refreshReplies() {
-
-        String log =
-                getSharedPreferences(
-                        "sms_agent",
-                        MODE_PRIVATE)
-
-                        .getString(
-                                "reply_log",
-                                "—");
-
-        repliesText.setText(
-                "Replies:\n"
-                        + log);
-    }
-
-    private void toast(
-            String text) {
-
-        Toast.makeText(
-                this,
-                text,
-                Toast.LENGTH_SHORT)
-                .show();
-    }
-
-    static class Customer {
-
-        final String phone;
-        final String name;
-        final String amount;
-        final String due;
-        final String last4;
-
-        Customer(
-                String phone,
-                String name,
-                String amount,
-                String due,
-                String last4) {
-
-            this.phone = phone;
-            this.name = name;
-            this.amount = amount;
-            this.due = due;
-            this.last4 = last4;
-        }
-    }
-}
