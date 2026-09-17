@@ -492,4 +492,39 @@ public class MainActivity extends Activity {
                 sendNextRunnable);
 
         statusText.setText(
-                "Status: "
+                "Status: " + message);
+    }
+
+    private void toast(
+            String message) {
+
+        Toast.makeText(
+                this,
+                message,
+                Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    static class Customer {
+
+        final String phone;
+        final String name;
+        final String amount;
+        final String due;
+        final String last4;
+
+        Customer(
+                String phone,
+                String name,
+                String amount,
+                String due,
+                String last4) {
+
+            this.phone = phone;
+            this.name = name;
+            this.amount = amount;
+            this.due = due;
+            this.last4 = last4;
+        }
+    }
+}
