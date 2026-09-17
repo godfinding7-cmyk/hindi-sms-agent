@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,7 +24,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Authorized और consent वाले reminders के लिए"
+            android:text="केवल authorized और consent वाले reminder SMS के लिए"
             android:textSize="14sp"
             android:textColor="#666666"
             android:layout_marginBottom="20dp" />
@@ -56,12 +57,12 @@
             android:id="@+id/templateInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="150dp"
+            android:minHeight="160dp"
             android:gravity="top"
             android:inputType="textMultiLine"
             android:padding="12dp"
             android:layout_marginTop="6dp"
-            android:text="नमस्कार {name}, यह {identity} का reminder है। आपके रिकॉर्ड में ₹{amount} का बिल बाकी है, जिसकी अंतिम तारीख {due} है। Consumer No. ****{last4}. भुगतान केवल आधिकारिक वेबसाइट, ऐप या अधिकृत केंद्र से करें। अगर भुगतान हो चुका है तो PAID लिखें। आगे SMS नहीं चाहिए तो STOP लिखें।" />
+            android:text="नमस्कार {name}, यह {identity} का reminder है। आपके रिकॉर्ड में ₹{amount} का बिल बाकी है, जिसकी अंतिम तारीख {due} है। Consumer No. ****{last4}. भुगतान केवल आधिकारिक वेबसाइट, ऐप या अधिकृत केंद्र से करें।" />
 
         <Button
             android:id="@+id/importBtn"
@@ -91,7 +92,7 @@
             android:id="@+id/startBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="3. Start Authorized Queue"
+            android:text="3. Start Auto SMS Queue"
             android:layout_marginTop="10dp" />
 
         <Button
@@ -110,25 +111,8 @@
             android:textColor="#222222"
             android:padding="14dp"
             android:layout_marginTop="18dp"
-            android:background="#E8F5E9" />
-
-        <Button
-            android:id="@+id/repliesBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Refresh Customer Replies"
-            android:layout_marginTop="18dp" />
-
-        <TextView
-            android:id="@+id/repliesText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Replies:&#10;—"
-            android:textColor="#333333"
-            android:padding="14dp"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="30dp"
-            android:background="#FFFFFF" />
+            android:background="#E8F5E9" />
 
     </LinearLayout>
 
