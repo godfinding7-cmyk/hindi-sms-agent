@@ -20,17 +20,16 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends Activity {
 
     private static final int PICK_CSV = 1001;
     private static final int SMS_PERMISSION = 1002;
 
-    // फिलहाल testing के लिए 1 SMS प्रति minute
+    // 20 SMS लगभग 1 मिनट में
     private static final long SEND_INTERVAL_MS = 3000L;
 
-    // एक session में maximum 20 SMS
+    // एक session में maximum 20 customers
     private static final int MAX_PER_SESSION = 20;
 
     private final List<Customer> customers = new ArrayList<>();
@@ -76,6 +75,13 @@ public class MainActivity extends Activity {
 
         Button stopBtn =
                 findViewById(R.id.stopBtn);
+
+        // नया office-format SMS template
+        templateInput.setText(
+                "नमस्कार {name} जी, यह {identity} का reminder है। " +
+                "आपके Account No. ****{last4} पर ₹{amount} बकाया राशि है। " +
+                "कृपया भुगतान केवल आधिकारिक माध्यम से करें।"
+        );
 
         importBtn.setOnClickListener(v ->
                 pickCsv());
@@ -146,8 +152,9 @@ public class MainActivity extends Activity {
 
         customers.clear();
 
-        int noConsent = 0;
-        int invalid = 0;
+        int invalidRows = 0;
+        int validRows = 0;
+        int skippedLimit = 0;
 
         try {
 
@@ -165,9 +172,13 @@ public class MainActivity extends Activity {
 
             while ((line = br.readLine()) != null) {
 
-                // Header skip
                 if (firstLine) {
                     firstLine = false;
+
+                    // BOM remove
+                    line = line.replace("\uFEFF", "");
+
+                    // header को skip करना है
                     continue;
                 }
 
@@ -178,60 +189,59 @@ public class MainActivity extends Activity {
                 String[] p =
                         line.split(",", -1);
 
-                if (p.length < 6) {
-                    invalid++;
+                // Required:
+                // account_no,name,arrears,phone
+                if (p.length < 4) {
+                    invalidRows++;
                     continue;
                 }
 
-                String phone =
-                        cleanPhone(p[0]);
+                String accountNo =
+                        p[0].trim();
 
                 String name =
                         p[1].trim();
 
-                String amount =
+                String arrears =
                         p[2].trim();
 
-                String due =
-                        p[3].trim();
+                String phone =
+                        cleanPhone(p[3]);
 
-                String last4 =
-                        p[4].trim();
-
-                String consent =
-                        p[5]
-                                .trim()
-                                .toLowerCase(Locale.ROOT);
-
-                boolean allowed =
-                        consent.equals("yes")
-                                || consent.equals("true")
-                                || consent.equals("1");
-
-                if (!allowed) {
-                    noConsent++;
+                // account number check
+                if (accountNo.isEmpty()) {
+                    invalidRows++;
                     continue;
                 }
 
-                if (!phone.matches("\\+?[0-9]{10,13}")) {
-                    invalid++;
+                // phone check
+                if (!phone.matches("[0-9]{10}")) {
+                    invalidRows++;
+                    continue;
+                }
+
+                // amount check
+                if (arrears.isEmpty()) {
+                    arrears = "0";
+                }
+
+                validRows++;
+
+                if (customers.size()
+                        >= MAX_PER_SESSION) {
+
+                    skippedLimit++;
                     continue;
                 }
 
                 customers.add(
                         new Customer(
-                                phone,
+                                accountNo,
                                 name,
-                                amount,
-                                due,
-                                last4
+                                arrears,
+                                phone
                         )
                 );
-
-                if (customers.size()
-                        >= MAX_PER_SESSION) {
-                    break;
-                }
             }
 
             br.close();
@@ -239,16 +249,20 @@ public class MainActivity extends Activity {
             listInfo.setText(
                     "Ready to send: "
                             + customers.size()
-                            + "\nNo consent skipped: "
-                            + noConsent
+                            + "\nValid customers: "
+                            + validRows
                             + "\nInvalid rows: "
-                            + invalid
-                            + "\nMaximum/session: "
+                            + invalidRows
+                            + "\nSession limit: "
                             + MAX_PER_SESSION
+                            + (skippedLimit > 0
+                            ? "\nLimit के कारण skipped: "
+                            + skippedLimit
+                            : "")
             );
 
             statusText.setText(
-                    "Status: CSV loaded");
+                    "Status: CSV Ready");
 
         } catch (Exception e) {
 
@@ -262,11 +276,20 @@ public class MainActivity extends Activity {
 
         String phone =
                 raw.replaceAll(
-                        "[^0-9+]",
+                        "[^0-9]",
                         "");
 
-        if (phone.startsWith("0")
-                && phone.length() == 11) {
+        // +91 / 91 हटाएँ
+        if (phone.length() == 12
+                && phone.startsWith("91")) {
+
+            phone =
+                    phone.substring(2);
+        }
+
+        // 0 से शुरू होने वाला 11-digit number
+        if (phone.length() == 11
+                && phone.startsWith("0")) {
 
             phone =
                     phone.substring(1);
@@ -283,12 +306,18 @@ public class MainActivity extends Activity {
             return;
         }
 
+        Customer c =
+                customers.get(0);
+
         String message =
-                buildMessage(
-                        customers.get(0));
+                buildMessage(c);
 
         new AlertDialog.Builder(this)
-                .setTitle("First SMS Preview")
+                .setTitle(
+                        "SMS Preview\n"
+                                + c.name
+                                + " • "
+                                + c.phone)
                 .setMessage(message)
                 .setPositiveButton(
                         "OK",
@@ -321,7 +350,9 @@ public class MainActivity extends Activity {
         new AlertDialog.Builder(this)
                 .setTitle("Start SMS Queue?")
                 .setMessage(
-                        "केवल उन्हीं contacts को SMS भेजें जिन्होंने reminder के लिए consent दिया है।")
+                        customers.size()
+                                + " customers को SMS queue में भेजा जाएगा।"
+                )
                 .setNegativeButton(
                         "Cancel",
                         null)
@@ -338,7 +369,9 @@ public class MainActivity extends Activity {
         queueIndex = 0;
 
         statusText.setText(
-                "Status: SMS queue started");
+                "Status: SMS queue started\n"
+                        + "Total: "
+                        + customers.size());
 
         handler.post(
                 sendNextRunnable);
@@ -379,12 +412,18 @@ public class MainActivity extends Activity {
 
                         queueIndex++;
 
+                        int pending =
+                                customers.size()
+                                        - queueIndex;
+
                         statusText.setText(
-                                "SMS Sent: "
+                                "Status: Sending"
+                                        + "\nSent: "
                                         + queueIndex
                                         + "/"
                                         + customers.size()
-                                        + "\nNext SMS: 3 seconds"
+                                        + "\nPending: "
+                                        + pending
                         );
 
                         handler.postDelayed(
@@ -437,6 +476,15 @@ public class MainActivity extends Activity {
                     "Bill Reminder Service";
         }
 
+        String accountNo =
+                customer.accountNo;
+
+        String last4 =
+                accountNo.length() >= 4
+                        ? accountNo.substring(
+                                accountNo.length() - 4)
+                        : accountNo;
+
         return templateInput
                 .getText()
                 .toString()
@@ -454,20 +502,22 @@ public class MainActivity extends Activity {
                 .replace(
                         "{amount}",
                         safe(
-                                customer.amount,
-                                "—"))
+                                customer.arrears,
+                                "0"))
 
                 .replace(
-                        "{due}",
+                        "{arrears}",
                         safe(
-                                customer.due,
-                                "—"))
+                                customer.arrears,
+                                "0"))
+
+                .replace(
+                        "{account_no}",
+                        accountNo)
 
                 .replace(
                         "{last4}",
-                        safe(
-                                customer.last4,
-                                "—"));
+                        last4);
     }
 
     private String safe(
@@ -492,7 +542,8 @@ public class MainActivity extends Activity {
                 sendNextRunnable);
 
         statusText.setText(
-                "Status: " + message);
+                "Status: "
+                        + message);
     }
 
     private void toast(
@@ -507,24 +558,28 @@ public class MainActivity extends Activity {
 
     static class Customer {
 
-        final String phone;
+        final String accountNo;
         final String name;
-        final String amount;
-        final String due;
-        final String last4;
+        final String arrears;
+        final String phone;
 
         Customer(
-                String phone,
+                String accountNo,
                 String name,
-                String amount,
-                String due,
-                String last4) {
+                String arrears,
+                String phone) {
 
-            this.phone = phone;
-            this.name = name;
-            this.amount = amount;
-            this.due = due;
-            this.last4 = last4;
+            this.accountNo =
+                    accountNo;
+
+            this.name =
+                    name;
+
+            this.arrears =
+                    arrears;
+
+            this.phone =
+                    phone;
         }
     }
 }
