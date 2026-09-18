@@ -27,10 +27,10 @@ public class MainActivity extends Activity {
     private static final int SMS_PERMISSION = 1002;
 
     // 20 SMS लगभग 1 मिनट में
-    private static final long SEND_INTERVAL_MS = 3000L;
+    private static final long SEND_INTERVAL_MS = 9000L;
 
     // एक session में maximum 20 customers
-    private static final int MAX_PER_SESSION = 20;
+    private static final int MAX_PER_SESSION = 100;
 
     private final List<Customer> customers = new ArrayList<>();
 
